@@ -1,7 +1,7 @@
 import torch_audiomentations
 from torch import Tensor, clip
 
-from hw_asr.augmentations.base import AugmentationBase
+from src.augmentations.base import AugmentationBase
 
 
 class Gain(AugmentationBase):

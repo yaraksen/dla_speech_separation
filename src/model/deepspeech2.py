@@ -1,7 +1,7 @@
 from torch import nn
 import torch
 
-from hw_asr.base import BaseModel
+from src.base import BaseModel
 from typing import List
 
 

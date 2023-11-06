@@ -1,8 +1,8 @@
 import unittest
-from hw_asr.base.base_text_encoder import BaseTextEncoder
+from src.base.base_text_encoder import BaseTextEncoder
 
-from hw_asr.text_encoder.ctc_char_text_encoder import CTCCharTextEncoder
-from hw_asr.metric.utils import calc_cer, calc_wer
+from src.text_encoder.ctc_char_text_encoder import CTCCharTextEncoder
+from src.metric.utils import calc_cer, calc_wer
 import pickle
 from torch import tensor
 

@@ -1,8 +1,8 @@
 import torch_audiomentations
 from torch import Tensor
 
-from hw_asr.augmentations.base import AugmentationBase
-from hw_asr.augmentations.utils import download_asset
+from src.augmentations.base import AugmentationBase
+from src.augmentations.utils import download_asset
 
 
 class BackgroundNoise(AugmentationBase):

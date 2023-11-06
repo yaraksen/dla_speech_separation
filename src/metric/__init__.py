@@ -1,10 +1,10 @@
-from hw_asr.metric.cer_metric import ArgmaxCERMetric
-from hw_asr.metric.wer_metric import ArgmaxWERMetric
-from hw_asr.metric.cer_metric import BeamSearchCERMetric
-from hw_asr.metric.wer_metric import BeamSearchWERMetric
-from hw_asr.metric.cer_metric import LMBeamSearchCERMetric
-from hw_asr.metric.wer_metric import LMBeamSearchWERMetric
-from hw_asr.metric.wer_metric import LMBeamSearchAllMetric, BeamSearchAllMetric
+from src.metric.cer_metric import ArgmaxCERMetric
+from src.metric.wer_metric import ArgmaxWERMetric
+from src.metric.cer_metric import BeamSearchCERMetric
+from src.metric.wer_metric import BeamSearchWERMetric
+from src.metric.cer_metric import LMBeamSearchCERMetric
+from src.metric.wer_metric import LMBeamSearchWERMetric
+from src.metric.wer_metric import LMBeamSearchAllMetric, BeamSearchAllMetric
 
 __all__ = [
     "ArgmaxWERMetric",
