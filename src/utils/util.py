@@ -54,7 +54,7 @@ def prepare_device(n_gpu_use):
     setup GPU device if available. get gpu device indices which are used for DataParallel
     """
     n_gpu = torch.cuda.device_count()
-    if (n_gpu_use > 0 and n_gpu == 0) or os.environ['USE_CPU']:
+    if (n_gpu_use > 0 and n_gpu == 0): # or os.environ['USE_CPU']
         print(
             "Warning: There's no GPU available on this machine,"
             "training will be performed on CPU."

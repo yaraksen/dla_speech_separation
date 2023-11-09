@@ -1,7 +1,7 @@
 from torch import Tensor, zeros_like
 from torch.nn import CrossEntropyLoss
 from torch.nn.functional import pad
-from torchmetrics import ScaleInvariantSignalDistortionRatio
+from torchmetrics.audio import ScaleInvariantSignalDistortionRatio
 from torch.nn import Module
 
 

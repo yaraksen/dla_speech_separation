@@ -3,7 +3,7 @@ from typing import List
 import torch
 from torch import Tensor
 
-from torchmetrics import ScaleInvariantSignalDistortionRatio
+from torchmetrics.audio import ScaleInvariantSignalDistortionRatio
 from src.base.base_metric import BaseMetric
 
 class SiSDRMetric(BaseMetric):
