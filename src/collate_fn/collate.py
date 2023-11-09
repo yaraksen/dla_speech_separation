@@ -12,13 +12,11 @@ def collate_fn(dataset_items: List[dict]):
     """
 
     result_batch = {}
-    result_batch["text"] = [rec["text"] for rec in dataset_items]
-    result_batch["audio_path"] = [rec["audio_path"] for rec in dataset_items]
+    result_batch["mixed"] = pad_sequence([rec["mixed"].squeeze(0) for rec in dataset_items], True, 0)
+    result_batch["ref"] = pad_sequence([rec["ref"].squeeze(0) for rec in dataset_items], True, 0)
+    result_batch["target"] = pad_sequence([rec["target"].squeeze(0) for rec in dataset_items], True, 0)
 
-    result_batch["audio"] = pad_sequence([rec["audio"].squeeze(0) for rec in dataset_items], True, 0)
-    # shape: batch_size_dim, feature_length_dim, time_dim = batch["spectrogram"].shape
-    result_batch["spectrogram"] = pad_sequence([rec["spectrogram"].permute(2, 1, 0) for rec in dataset_items], True, 0).squeeze(-1).permute(0, 2, 1)
-    result_batch["spectrogram_length"] = tensor([rec["spectrogram"].size(2) for rec in dataset_items])
-    result_batch["text_encoded"] = pad_sequence([rec["text_encoded"].squeeze(0) for rec in dataset_items], True, 0)
-    result_batch["text_encoded_length"] = tensor([rec["text_encoded"].size(1) for rec in dataset_items])
+    result_batch["mixed_lens"] = tensor([rec["mixed"].size(-1) for rec in dataset_items])
+    result_batch["ref_lens"] = tensor([rec["ref"].size(-1) for rec in dataset_items])
+    result_batch["speakers_ids"] = tensor([rec["speakers_ids"] for rec in dataset_items])
     return result_batch

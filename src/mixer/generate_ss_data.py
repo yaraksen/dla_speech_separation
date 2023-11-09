@@ -3,39 +3,44 @@ import librosa
 import soundfile as sf
 import pyloudnorm as pyln
 import os
-import glob
-from typing import Tuple, List
+from glob import glob
+from typing import Tuple, List, Dict
+import random
 from concurrent.futures import ProcessPoolExecutor
+import argparse
 
 
 class LibriSpeechSpeakerFiles:
-    def __init__(self, speaker_id: str, audios_dir: str, audioTemplate="*-norm.wav"):
+    def __init__(self, speaker_id: str, audios_dir: str, audioTemplate="*.flac"):
         self.id = speaker_id
         self.files = []
         self.audioTemplate = audioTemplate
         self.files = self.find_files_by_worker(audios_dir)
 
-    def find_files_by_worker(self, audios_dir):
-        speakerDir = os.path.join(audios_dir,self.id) #it is a string
+    def find_files_by_worker(self, audios_dir) -> List:
+        speakerDir = os.path.join(audios_dir, self.id)
         chapterDirs = os.scandir(speakerDir)
-        files=[]
+        speaker_files = []
         for chapterDir in chapterDirs:
-            files = files + [file for file in glob(os.path.join(speakerDir,chapterDir.name)+"/"+self.audioTemplate)]
-        return files
+            speaker_files += [file for file in glob(os.path.join(speakerDir, chapterDir.name, self.audioTemplate))]
+        return speaker_files
 
 
 class MixtureGenerator:
     def __init__(self, speakers_files, out_folder, nfiles=5000, test=False, randomState=42):
-        self.speakers_files = speakers_files # list of SpeakerFiles for every speaker_id
+        self.speakers_files: List[LibriSpeechSpeakerFiles] = speakers_files
         self.nfiles = nfiles
         self.randomState = randomState
         self.out_folder = out_folder
         self.test = test
         random.seed(self.randomState)
         if not os.path.exists(self.out_folder):
+            print(f'Creating directory {self.out_folder}')
             os.makedirs(self.out_folder)
 
-    def generate_triplets(self):
+    def generate_triplets(self) -> Dict:
+        """Generates 'nfiles' triplets from random pairs of speakers
+        """
         i = 0
         all_triplets = {"reference": [], "target": [], "noise": [], "target_id": [], "noise_id": []}
         while i < self.nfiles:
@@ -56,6 +61,8 @@ class MixtureGenerator:
         return all_triplets
 
     def triplet_generator(self, target_speaker, noise_speaker, number_of_triplets):
+        """Generated number of triplets for specified pair of speakers
+        """
         max_num_triplets = min(len(target_speaker.files), len(noise_speaker.files))
         number_of_triplets = min(max_num_triplets, number_of_triplets)
 
@@ -71,7 +78,7 @@ class MixtureGenerator:
 
         return triplets
 
-    def generate_mixes(self, snr_levels=[0], num_workers=10, update_steps=10, **kwargs):
+    def generate_mixes(self, snr_levels, num_workers, update_steps, **kwargs):
 
         triplets = self.generate_triplets()
 
@@ -98,7 +105,7 @@ class MixtureGenerator:
 def snr_mixer(signal, noise, snr) -> np.ndarray:
     """Mixes two signals with specified signal to noise ratio
     """
-    amp_noise = np.linalg.norm(signal) / np.pow(10, snr / 20)
+    amp_noise = np.linalg.norm(signal) / np.power(10, snr / 20)
     noise_norm = (noise / np.linalg.norm(noise)) * amp_noise
     mix = signal + noise_norm
     return mix
@@ -130,7 +137,7 @@ def cut_audios(s1, s2, time_interval, sample_rate) -> Tuple[List, List]:
 
     return s1_cut, s2_cut
 
-def fix_length(s1, s2, min_or_max: str):
+def fix_length(s1, s2, min_or_max: str = 'min'):
     """If 'min' cuts to the min length, if 'max' pads with zeros to the max length
     """
     assert min_or_max in ('min', 'max'), f"{min_or_max} is not supported"
@@ -146,6 +153,10 @@ def fix_length(s1, s2, min_or_max: str):
     return s1, s2
 
 def create_mix(idx, triplet, snr_levels, out_dir, test=False, sr=16000, **kwargs):
+    """
+    Trims silence from both sides by trim_db. Concats higher then vad_db. Splits by audioLen intervals.
+    Randomly chooses SNR levels from snr_levels. 
+    """
     trim_db, vad_db = kwargs["trim_db"], kwargs["vad_db"]
     audioLen = kwargs["audioLen"]
 
@@ -220,3 +231,57 @@ def create_mix(idx, triplet, snr_levels, out_dir, test=False, sr=16000, **kwargs
         sf.write(path_mix, mix, sr)
         sf.write(path_target, s1, sr)
         sf.write(path_ref, ref, sr)
+
+
+def get_speakers_files(dataset_split: str) -> Tuple[List[LibriSpeechSpeakerFiles], str]:
+    audios_dir = os.path.join("data/datasets/librispeech/", dataset_split)
+    speakers_ids = os.listdir(audios_dir)
+    speakers_files = [LibriSpeechSpeakerFiles(id, audios_dir, "*.flac") for id in speakers_ids]
+    print(f"Got {len(speakers_files)} speakers for {dataset_split} split")
+    return speakers_files, f"data/datasets/speech_separation/{dataset_split}"
+
+
+def generate_mixes_dataset():
+    train_speakers_files, path_mixtures_train = get_speakers_files("train-clean-100")
+    val_speakers_files, path_mixtures_val = get_speakers_files("dev-clean")
+
+    mixer_train = MixtureGenerator(train_speakers_files, path_mixtures_train, nfiles=7000)
+    mixer_val = MixtureGenerator(val_speakers_files, path_mixtures_val, nfiles=500, test=True)
+
+    mixer_train.generate_mixes(snr_levels=[-5, 5],
+                                num_workers=80,
+                                update_steps=100,
+                                trim_db=20,
+                                vad_db=20,
+                                audioLen=3)
+
+    mixer_val.generate_mixes(snr_levels=[-5, 5],
+                            num_workers=80,
+                            update_steps=100,
+                            trim_db=None,
+                            vad_db=20,
+                            audioLen=3)
+
+    ref_train = sorted(glob(os.path.join(path_mixtures_train, '*-ref.wav')))
+    mix_train = sorted(glob(os.path.join(path_mixtures_train, '*-mixed.wav')))
+    target_train = sorted(glob(os.path.join(path_mixtures_train, '*-target.wav')))
+
+    assert len(ref_train) == len(mix_train) == len(target_train), "ref/mix/target should have the same size"
+
+    print(f"Train size: {len(mix_train)}")
+    print(f"Val size: {len(glob(os.path.join(path_mixtures_val, '*-mixed.wav')))}")
+
+
+# def main():
+#     args = argparse.ArgumentParser(description="Generates speech separation datasets")
+#     args.add_argument(
+#         "-s",
+#         "--split",
+#         type=str,
+#         help="Librispeech split name from which to generate",
+#         required=True
+#     )
+#     generate_mixes_dataset(args.parse_args().split)
+
+if __name__ == "__main__":
+    generate_mixes_dataset()
