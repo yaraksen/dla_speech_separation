@@ -17,7 +17,8 @@ def get_dataloaders(configs: ConfigParser):
 
         # set train augmentations
         if split == 'train':
-            wave_augs, spec_augs = src.augmentations.from_configs(configs)
+            # wave_augs, spec_augs = src.augmentations.from_configs(configs)
+            wave_augs, spec_augs = None, None
             drop_last = True
         else:
             wave_augs, spec_augs = None, None
