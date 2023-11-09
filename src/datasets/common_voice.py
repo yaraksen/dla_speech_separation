@@ -22,7 +22,9 @@ class CommonVoiceDataset(BaseDataset):
         super().__init__(index, *args, **kwargs)
 
     def _get_or_load_index(self, split):
-        index_path = self._data_dir / f"{split}_index.json"
+        # index_path = self._data_dir / f"{split}_index.json"
+        index_path = Path(f"/kaggle/input/ss-index/{split}_index.json")
+
         if index_path.exists():
             with index_path.open() as f:
                 index = json.load(f)
