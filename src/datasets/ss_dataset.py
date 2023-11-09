@@ -55,7 +55,7 @@ class SpeechSeparationDataset(Dataset):
 
     def _get_or_load_index(self, part):
         # index_path = self._data_dir / f"{part}_index.json"
-        index_path = Path(f"/kaggle/input/ss-index/{part}_index.json")
+        index_path = Path(f"/kaggle/input/ss-index2/{part}_index.json")
         
         if index_path.exists():
             with index_path.open() as f:
