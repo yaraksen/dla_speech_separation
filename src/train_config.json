@@ -31,14 +31,14 @@
   "lr_scheduler": {
     "type": "CosineAnnealingLR",
     "args": {
-      "T_max": 51000
+      "T_max": 25500
     }
   },
   "trainer": {
     "epochs": 510,
     "len_epoch": 100,
     "grad_norm_clip": 10,
-    "grad_acc_steps": 1,
+    "grad_acc_steps": 2,
     "monitor": "min val_loss",
     "early_stop": 100,
     "save_dir": "saved/",
