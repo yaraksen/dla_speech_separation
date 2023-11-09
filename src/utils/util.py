@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pandas as pd
 import torch
+import os
 
 ROOT_PATH = Path(__file__).absolute().resolve().parent.parent.parent
 
