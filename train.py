@@ -44,7 +44,7 @@ def main(config):
     # get function handles of loss and metrics
     loss_module = config.init_obj(config["loss"], module_loss).to(device)
     metrics = [
-        config.init_obj(metric_dict, module_metric)
+        config.init_obj(metric_dict, module_metric).to(device)
         for metric_dict in config["metrics"]
     ]
 
