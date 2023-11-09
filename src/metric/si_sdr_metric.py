@@ -6,7 +6,7 @@ from torch import Tensor
 from torchmetrics.audio import ScaleInvariantSignalDistortionRatio
 from src.base.base_metric import BaseMetric
 
-class SiSDRMetric(BaseMetric, torch.nn.Module):
+class SiSDRMetric(BaseMetric):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.si_sdr = ScaleInvariantSignalDistortionRatio()
