@@ -27,7 +27,9 @@ class SiSDRMetric(BaseMetric):
         pred_short = to_real_length(pred_short, mixed_lens)
 
         pad_value = pred_short.shape[-1] - target.shape[-1]
-        assert pad_value >= 0, "pad value cannot be less 0"
-        target = pad(target, (0, pad_value))
+        if pad_value >= 0:
+            target = pad(target, (0, pad_value))
+        else:
+            pred_short = pad(pred_short, (0, -pad_value))
 
         return self.si_sdr(pred_short, target)

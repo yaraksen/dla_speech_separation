@@ -25,7 +25,7 @@ class SpexLoss(Module):
         target = to_real_length(batch["target"], batch["mixed_lens"])
 
         pad_value = batch["pred_short"].shape[-1] - batch["target"].shape[-1]
-        assert pad_value >= 0, "pad value cannot be less 0"
+        assert pad_value >= 0, f"pad_value {pad_value} < 0"
         target = pad(target, (0, pad_value))
 
         # getting not mean, but sum
