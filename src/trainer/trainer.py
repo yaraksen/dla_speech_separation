@@ -136,8 +136,8 @@ class Trainer(BaseTrainer):
                 # self._log_predictions(**batch)
                 # self._log_spectrogram(batch["spectrogram"])
                 rand_idx = torch.randint(low=0, high=batch["pred_short"].shape[0], size=(1,))
-                self._log_audio(batch["pred_short"][rand_idx])
-                self._log_audio(batch["target"][rand_idx])
+                self._log_audio(batch["pred_short"][rand_idx], "pred")
+                self._log_audio(batch["target"][rand_idx], "target")
                 self._log_scalars(self.train_metrics)
                 # we don't want to reset train metrics at the start of every epoch
                 # because we are interested in recent train metrics
@@ -266,9 +266,9 @@ class Trainer(BaseTrainer):
         image = PIL.Image.open(plot_spectrogram_to_buf(spectrogram))
         self.writer.add_image("spectrogram", ToTensor()(image))
     
-    def _log_audio(self, audio: torch.Tensor):
+    def _log_audio(self, audio: torch.Tensor, tag: str):
         # audio = random.choice(audio_batch.cpu())
-        self.writer.add_audio("audio", audio.cpu(), sample_rate=16000)
+        self.writer.add_audio(tag, audio.cpu(), sample_rate=16000)
 
     @torch.no_grad()
     def get_grad_norm(self, norm_type=2):
