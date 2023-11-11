@@ -32,6 +32,7 @@
     "type": "ReduceLROnPlateau",
     "args": {
       "patience": 2,
+      "cooldown": 2,
       "factor": 0.5,
       "verbose": true
     }
@@ -60,7 +61,7 @@
           "type": "SpeechSeparationDataset",
           "args": {
             "part": "train-clean-100",
-            "data_dir": "/kaggle/input/speech-separation/train-clean-100/data/datasets/speech_separation/"
+            "data_dir": "data/datasets/speech_separation/"
           }
         }
       ]
