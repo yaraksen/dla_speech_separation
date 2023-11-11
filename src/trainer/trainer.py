@@ -15,6 +15,7 @@ from src.base.base_text_encoder import BaseTextEncoder
 from src.logger.utils import plot_spectrogram_to_buf
 from src.metric.utils import calc_cer, calc_wer
 from src.utils import inf_loop, MetricTracker
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 
 class Trainer(BaseTrainer):
@@ -130,7 +131,7 @@ class Trainer(BaseTrainer):
                     )
                 )
                 self.writer.add_scalar(
-                    "learning rate", self.lr_scheduler.get_last_lr()[0]
+                    "learning rate", self.optimizer.param_groups[0]['lr'] # self.lr_scheduler.get_last_lr()[0]
                 )
                 # self._log_predictions(**batch)
                 # self._log_spectrogram(batch["spectrogram"])
@@ -150,6 +151,9 @@ class Trainer(BaseTrainer):
         for part, dataloader in self.evaluation_dataloaders.items():
             val_log = self._evaluation_epoch(epoch, part, dataloader)
             log.update(**{f"{part}_{name}": value for name, value in val_log.items()})
+        
+        if self.lr_scheduler is not None and isinstance(self.lr_scheduler, ReduceLROnPlateau):
+            self.lr_scheduler.step(log["test_loss"])
 
         return log
 
@@ -175,7 +179,7 @@ class Trainer(BaseTrainer):
 
                 self.train_metrics.update("grad norm", self.get_grad_norm())
                 self.optimizer.zero_grad()
-                if self.lr_scheduler is not None:
+                if self.lr_scheduler is not None and not isinstance(self.lr_scheduler, ReduceLROnPlateau):
                     self.lr_scheduler.step()
             
             batch["loss"] = batch["loss"] * self.grad_acc_steps

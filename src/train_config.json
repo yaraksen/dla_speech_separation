@@ -29,16 +29,18 @@
     }
   },
   "lr_scheduler": {
-    "type": "CosineAnnealingLR",
+    "type": "ReduceLROnPlateau",
     "args": {
-      "T_max": 25500
+      "patience": 2,
+      "factor": 0.5,
+      "verbose": true
     }
   },
   "trainer": {
     "epochs": 510,
     "len_epoch": 100,
     "grad_norm_clip": 10,
-    "grad_acc_steps": 2,
+    "grad_acc_steps": 1,
     "monitor": "min val_loss",
     "early_stop": 100,
     "save_dir": "saved/",
@@ -64,7 +66,7 @@
       ]
     },
     "test": {
-      "batch_size": 3,
+      "batch_size": 1,
       "num_workers": 4,
       "datasets": [
         {
@@ -84,7 +86,7 @@
   "optimizer": {
     "type": "AdamW",
     "args": {
-      "lr": 1e-3,
+      "lr": 1e-4,
       "weight_decay": 0.00005
     }
   },
