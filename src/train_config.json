@@ -33,6 +33,7 @@
     "args": {
       "patience": 2,
       "cooldown": 2,
+      "mode": "max",
       "factor": 0.5,
       "verbose": true
     }
