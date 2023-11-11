@@ -44,7 +44,7 @@
     "grad_norm_clip": 10,
     "grad_acc_steps": 1,
     "monitor": "min val_loss",
-    "early_stop": 100,
+    "early_stop": 500,
     "save_dir": "saved/",
     "save_period": 5,
     "log_parameters": false,
