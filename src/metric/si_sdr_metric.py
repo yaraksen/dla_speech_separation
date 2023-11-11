@@ -22,6 +22,7 @@ class SiSDRMetric(BaseMetric):
         self.si_sdr = self.si_sdr.to(device)
         return self
 
+    @torch.no_grad()
     def __call__(self, pred_short: Tensor, target: Tensor, mixed_lens, **kwargs):
         target = to_real_length(target, mixed_lens)
         pred_short = to_real_length(pred_short, mixed_lens)

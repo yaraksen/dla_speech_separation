@@ -153,8 +153,7 @@ class Trainer(BaseTrainer):
             log.update(**{f"{part}_{name}": value for name, value in val_log.items()})
         
         if self.lr_scheduler is not None and isinstance(self.lr_scheduler, ReduceLROnPlateau):
-            print(log)
-            self.lr_scheduler.step(log["SI-SDR_test"])
+            self.lr_scheduler.step(log["test_SI-SDR"])
 
         return log
 
