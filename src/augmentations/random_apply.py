@@ -1,11 +1,10 @@
 import random
-from typing import Callable
 
 from torch import Tensor
 
 
 class RandomApply:
-    def __init__(self, augmentation: Callable, p: float):
+    def __init__(self, augmentation, p: float):
         assert 0 <= p <= 1
         self.augmentation = augmentation
         self.p = p

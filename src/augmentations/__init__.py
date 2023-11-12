@@ -1,4 +1,4 @@
-from typing import List, Callable
+from typing import List
 
 from src.augmentations.sequential import SequentialAugmentation
 from src.utils.parse_config import ConfigParser
@@ -21,7 +21,7 @@ from src.utils.parse_config import ConfigParser
 #     return _to_function(wave_augs), _to_function(spec_augs)
 
 
-def _to_function(augs_list: List[Callable]):
+def _to_function(augs_list: List):
     if len(augs_list) == 0:
         return None
     elif len(augs_list) == 1:
