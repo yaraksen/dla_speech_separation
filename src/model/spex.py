@@ -226,8 +226,9 @@ class SpexPlus(nn.Module):
 
         # speech decoder
         pred_short = self.dec_short(pred_short).squeeze(1)
-        pred_mid = self.dec_mid(pred_mid).squeeze(1)[..., :mixed.shape[2]]
-        pred_long = self.dec_long(pred_long).squeeze(1)[..., :mixed.shape[2]]
+        pred_short = F.pad(pred_short, (0, mixed.shape[-1] - pred_short.shape[-1]))
+        pred_mid = self.dec_mid(pred_mid).squeeze(1)[..., :mixed.shape[-1]]
+        pred_long = self.dec_long(pred_long).squeeze(1)[..., :mixed.shape[-1]]
 
         return {"pred_short": pred_short,
                 "pred_mid": pred_mid,

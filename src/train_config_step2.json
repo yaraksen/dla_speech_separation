@@ -38,7 +38,7 @@
     },
     "trainer": {
       "epochs": 60,
-      "len_epoch": 1465,
+      "len_epoch": 1470,
       "grad_norm_clip": 10,
       "grad_acc_steps": 1,
       "monitor": "min val_loss",
@@ -60,7 +60,7 @@
             "type": "SpeechSeparationDataset",
             "args": {
               "part": "train-clean-100",
-              "data_dir": "data/datasets/speech_separation/"
+              "data_dir": "/kaggle/input/speech-separation/train-clean-100/data/datasets/speech_separation/"
             }
           }
         ]
@@ -95,12 +95,6 @@
         "type": "SiSDRMetric",
         "args": {
           "name": "SI-SDR"
-        }
-      },
-      {
-        "type": "PESQMetric",
-        "args": {
-          "name": "PESQ"
         }
       }
     ]

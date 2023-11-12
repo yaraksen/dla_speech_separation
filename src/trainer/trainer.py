@@ -55,10 +55,11 @@ class Trainer(BaseTrainer):
         if self.len_epoch == 1:
             self.log_step = 1
         else:
-            self.log_step = (self.len_epoch // self.grad_acc_steps) if self.grad_acc_steps > 1 else 50
+            # self.log_step = (self.len_epoch // self.grad_acc_steps) if self.grad_acc_steps > 1 else 50
+            self.log_step = self.len_epoch // self.grad_acc_steps // 3
             
         assert self.len_epoch % self.grad_acc_steps == 0, f"{self.len_epoch} % {self.grad_acc_steps} != 0. I was lazy, so it should be like that to work correctly"
-        assert (self.len_epoch // self.grad_acc_steps) % self.log_step == 0, f"{self.len_epoch // self.grad_acc_steps} % {self.log_step} != 0"
+        # assert (self.len_epoch // self.grad_acc_steps) % self.log_step == 0, f"{self.len_epoch // self.grad_acc_steps} % {self.log_step} != 0"
 
         print('self.log_step:', self.log_step)
         print('self.len_epoch:', self.len_epoch)
@@ -157,7 +158,7 @@ class Trainer(BaseTrainer):
             log.update(**{f"{part}_{name}": value for name, value in val_log.items()})
         
         if self.lr_scheduler is not None and isinstance(self.lr_scheduler, ReduceLROnPlateau):
-            self.lr_scheduler.step(log["test_SI-SDR"])
+            self.lr_scheduler.step(log["test_loss"])
 
         return log
 
