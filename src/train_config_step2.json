@@ -60,7 +60,7 @@
             "type": "SpeechSeparationDataset",
             "args": {
               "part": "train-clean-100",
-              "data_dir": "/home/jupyter/mnt/datasets/ss-dataset-no-wad/ss-dataset-no-wad/"
+              "data_dir": "/home/jupyter/work/resources/ss-dataset-no-wad/"
             }
           }
         ]
@@ -73,7 +73,7 @@
             "type": "SpeechSeparationDataset",
             "args": {
               "part": "dev-clean",
-              "data_dir": "/home/jupyter/mnt/datasets/ss-dataset-no-wad/ss-dataset-no-wad/"
+              "data_dir": "/home/jupyter/work/resources/ss-dataset-no-wad/"
             }
           }
         ]
