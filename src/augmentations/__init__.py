@@ -1,5 +1,4 @@
-from collections import Callable
-from typing import List
+from typing import List, Callable
 
 from src.augmentations.sequential import SequentialAugmentation
 from src.utils.parse_config import ConfigParser
