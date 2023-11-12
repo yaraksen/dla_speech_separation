@@ -4,7 +4,7 @@ import torch
 from torch import Tensor, zeros_like
 from torch.nn.functional import pad
 
-from torchmetrics.functional.audio import scale_invariant_signal_distortion_ratio
+from torchmetrics.functional.audio.pesq import perceptual_evaluation_speech_quality
 from src.base.base_metric import BaseMetric
 
 def to_real_length(t: Tensor, mixed_lens: Tensor) -> Tensor:
@@ -13,12 +13,13 @@ def to_real_length(t: Tensor, mixed_lens: Tensor) -> Tensor:
         masked[row, :len] = t[row, :len]
     return masked
 
-class SiSDRMetric(BaseMetric):
+class PESQMetric(BaseMetric):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # self.pesq = PerceptualEvaluationSpeechQuality(fs=16000, mode="wb")
     
     # def to(self, device):
-    #     self.si_sdr = self.si_sdr.to(device)
+    #     self.pesq = self.pesq.to(device)
     #     return self
 
     @torch.no_grad()
@@ -32,4 +33,4 @@ class SiSDRMetric(BaseMetric):
         else:
             pred_short = pad(pred_short, (0, -pad_value))
 
-        return scale_invariant_signal_distortion_ratio(pred_short, target, zero_mean=True).item()
+        return perceptual_evaluation_speech_quality(pred_short, target, fs=16000, mode="wb").item()

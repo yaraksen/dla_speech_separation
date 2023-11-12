@@ -6,6 +6,7 @@ from src.metric.cer_metric import LMBeamSearchCERMetric
 from src.metric.wer_metric import LMBeamSearchWERMetric
 from src.metric.wer_metric import LMBeamSearchAllMetric, BeamSearchAllMetric
 from src.metric.si_sdr_metric import SiSDRMetric
+from src.metric.pesq_metric import PESQMetric
 
 __all__ = [
     "ArgmaxWERMetric",
@@ -16,5 +17,6 @@ __all__ = [
     "LMBeamSearchCERMetric",
     "LMBeamSearchAllMetric",
     "BeamSearchAllMetric",
-    "SiSDRMetric"
+    "SiSDRMetric",
+    "PESQMetric"
 ]

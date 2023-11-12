@@ -157,7 +157,7 @@ def create_mix(idx, triplet, snr_levels, out_dir, test=False, sr=16000, **kwargs
     Trims silence from both sides by trim_db. Concats higher then vad_db. Splits by audioLen intervals.
     Randomly chooses SNR levels from snr_levels. 
     """
-    # trim_db, vad_db = kwargs["trim_db"], kwargs["vad_db"]
+    trim_db, vad_db = kwargs["trim_db"], kwargs["vad_db"]
     audioLen = kwargs["audioLen"]
 
     s1_path = triplet["target"]
@@ -187,10 +187,10 @@ def create_mix(idx, triplet, snr_levels, out_dir, test=False, sr=16000, **kwargs
     if amp_s1 == 0 or amp_s2 == 0 or amp_ref == 0:
         return
 
-    # if trim_db:
-    #     ref, _ = librosa.effects.trim(refNorm, top_db=trim_db)
-    #     s1, _ = librosa.effects.trim(s1Norm, top_db=trim_db)
-    #     s2, _ = librosa.effects.trim(s2Norm, top_db=trim_db)
+    if trim_db:
+        ref, _ = librosa.effects.trim(refNorm, top_db=trim_db)
+        s1, _ = librosa.effects.trim(s1Norm, top_db=trim_db)
+        s2, _ = librosa.effects.trim(s2Norm, top_db=trim_db)
 
     if len(ref) < sr:
         return
@@ -202,7 +202,7 @@ def create_mix(idx, triplet, snr_levels, out_dir, test=False, sr=16000, **kwargs
     snr = np.random.choice(snr_levels, 1).item()
 
     if not test:
-        # s1, s2 = vad_merge(s1, vad_db), vad_merge(s2, vad_db)
+        s1, s2 = vad_merge(s1, vad_db), vad_merge(s2, vad_db)
         s1_cut, s2_cut = cut_audios(s1, s2, audioLen, sr)
 
         for i in range(len(s1_cut)):
@@ -251,15 +251,15 @@ def generate_mixes_dataset():
     mixer_train.generate_mixes(snr_levels=[-5, 5],
                                 num_workers=80,
                                 update_steps=100,
-                                trim_db=None,
-                                vad_db=None,
+                                trim_db=20,
+                                vad_db=20,
                                 audioLen=3)
 
     mixer_val.generate_mixes(snr_levels=[-5, 5],
                             num_workers=80,
                             update_steps=100,
                             trim_db=None,
-                            vad_db=None,
+                            vad_db=20,
                             audioLen=3)
 
     ref_train = sorted(glob(os.path.join(path_mixtures_train, '*-ref.wav')))

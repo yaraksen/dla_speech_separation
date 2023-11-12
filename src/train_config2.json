@@ -32,18 +32,18 @@
       "type": "ReduceLROnPlateau",
       "args": {
         "patience": 2,
-        "cooldown": 2,
+        "mode": "max",
         "factor": 0.5,
         "verbose": true
       }
     },
     "trainer": {
-      "epochs": 100,
-      "len_epoch": 1,
+      "epochs": 50,
+      "len_epoch": 1465,
       "grad_norm_clip": 10,
       "grad_acc_steps": 1,
       "monitor": "min val_loss",
-      "early_stop": 100,
+      "early_stop": 500,
       "save_dir": "saved/",
       "save_period": 5,
       "log_parameters": false,
@@ -54,7 +54,7 @@
     },
     "data": {
       "train": {
-        "batch_size": 2,
+        "batch_size": 3,
         "num_workers": 4,
         "datasets": [
           {
@@ -74,7 +74,7 @@
             "type": "SpeechSeparationDataset",
             "args": {
               "part": "dev-clean",
-              "data_dir": "data/datasets/speech_separation/"
+              "data_dir": "/kaggle/input/speech-separation/dev-clean/data/datasets/speech_separation/"
             }
           }
         ]
@@ -87,8 +87,8 @@
     "optimizer": {
       "type": "AdamW",
       "args": {
-        "lr": 1e-4,
-        "weight_decay": 0.00005
+        "lr": 5e-4,
+        "weight_decay": 0.00001
       }
     },
     "metrics": [
@@ -96,6 +96,12 @@
         "type": "SiSDRMetric",
         "args": {
           "name": "SI-SDR"
+        }
+      },
+      {
+        "type": "PESQMetric",
+        "args": {
+          "name": "PESQ"
         }
       }
     ]

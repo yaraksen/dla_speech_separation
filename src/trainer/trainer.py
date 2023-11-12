@@ -168,8 +168,8 @@ class Trainer(BaseTrainer):
         else:
             batch["logits"] = outputs
         
+        batch["loss"] = self.criterion(is_train, **batch)
         if is_train:
-            batch["loss"] = self.criterion(**batch)
             batch["loss"] = batch["loss"] / self.grad_acc_steps
             batch["loss"].backward()
 

@@ -62,7 +62,7 @@
           "type": "SpeechSeparationDataset",
           "args": {
             "part": "train-clean-100",
-            "data_dir": "data/datasets/speech_separation/"
+            "data_dir": "/kaggle/input/speech-separation/train-clean-100/data/datasets/speech_separation/"
           }
         }
       ]
@@ -97,6 +97,12 @@
       "type": "SiSDRMetric",
       "args": {
         "name": "SI-SDR"
+      }
+    },
+    {
+      "type": "PESQMetric",
+      "args": {
+        "name": "PESQ"
       }
     }
   ]
