@@ -55,7 +55,7 @@ class SpeechSeparationDataset(Dataset):
 
     def _get_or_load_index(self, part):
         if os.path.exists("/kaggle/"):
-            index_path = Path(f"/kaggle/input/ss-nowad-idx/{part}_index.json")
+            index_path = Path(f"/kaggle/input/index-nowad/{part}_index.json")
         elif os.path.exists("/home/jupyter/"):
             index_path = Path(f"/home/jupyter/work/resources/{part}_index.json")
         else:
