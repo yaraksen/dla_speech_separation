@@ -189,7 +189,7 @@ class Trainer(BaseTrainer):
             
             batch["loss"] = batch["loss"] * self.grad_acc_steps
         
-            metrics.update("loss", batch["loss"].item())
+        metrics.update("loss", batch["loss"].item())
     
         for met in self.metrics:
             metrics.update(met.name, met(**batch))
