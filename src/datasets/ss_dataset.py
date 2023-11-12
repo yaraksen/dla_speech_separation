@@ -57,7 +57,7 @@ class SpeechSeparationDataset(Dataset):
         if os.path.exists("/kaggle/"):
             index_path = Path(f"/kaggle/input/ss-index2/{part}_index.json")
         else:
-            index_path = self._data_dir / f"{part}_index.json"
+            index_path = self._data_dir / f"{part}_indices.json"
         
         if index_path.exists():
             with index_path.open() as f:

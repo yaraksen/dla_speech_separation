@@ -68,7 +68,8 @@ def prepare_device(n_gpu_use):
         n_gpu_use = n_gpu
 
     device_id = 0 # find_device()
-    device = torch.device(f"cuda:{device_id}" if n_gpu_use > 0 and os.path.exists("/kaggle/") else "cpu")
+    on_server = os.path.exists("/kaggle/") or os.path.exists("/home/jupyter")
+    device = torch.device(f"cuda:{device_id}" if n_gpu_use > 0 and on_server else "cpu")
     print(device)
     list_ids = list(range(n_gpu_use))
     return device, list_ids

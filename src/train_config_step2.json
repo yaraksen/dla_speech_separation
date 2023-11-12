@@ -53,14 +53,14 @@
     },
     "data": {
       "train": {
-        "batch_size": 3,
+        "batch_size": 6,
         "num_workers": 4,
         "datasets": [
           {
             "type": "SpeechSeparationDataset",
             "args": {
               "part": "train-clean-100",
-              "data_dir": "/kaggle/input/speech-separation/train-clean-100/data/datasets/speech_separation/"
+              "data_dir": "/home/jupyter/mnt/datasets/ss-dataset-no-wad/ss-dataset-no-wad/"
             }
           }
         ]
@@ -73,7 +73,7 @@
             "type": "SpeechSeparationDataset",
             "args": {
               "part": "dev-clean",
-              "data_dir": "/kaggle/input/speech-separation/dev-clean/data/datasets/speech_separation/"
+              "data_dir": "/home/jupyter/mnt/datasets/ss-dataset-no-wad/ss-dataset-no-wad/"
             }
           }
         ]
