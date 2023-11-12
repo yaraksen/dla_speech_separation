@@ -29,18 +29,24 @@ class SpexLoss(Module):
 
     def forward(self, is_train: bool, **batch) -> Tensor:
         num_samples = batch["target"].shape[0]
+
         target = to_real_length(batch["target"], batch["mixed_lens"])
+        pred_short = to_real_length(batch["pred_short"], batch["mixed_lens"])
+        pred_mid = to_real_length(batch["pred_mid"], batch["mixed_lens"])
+        pred_long = to_real_length(batch["pred_long"], batch["mixed_lens"])
 
-        pad_value = batch["pred_short"].shape[-1] - batch["target"].shape[-1]
-        assert pad_value >= 0, f"pad_value {pad_value} < 0"
-        target = pad(target, (0, pad_value))
+        pad_value = pred_short.shape[-1] - target.shape[-1]
+        if pad_value > 0:
+            target = pad(target, (0, pad_value))
+        elif pad_value < 0:
+            pad_value = -pad_value
+            pred_short = pad(pred_short, (0, pad_value))
+            pred_mid = pad(pred_mid, (0, pad_value))
+            pred_long = pad(pred_long, (0, pad_value))
 
-        short_si_sdr = si_sdr(to_real_length(batch["pred_short"], batch["mixed_lens"]),
-                                   target).sum()
-        mid_si_sdr = si_sdr(to_real_length(batch["pred_mid"], batch["mixed_lens"]),
-                                 target).sum()
-        long_si_sdr = si_sdr(to_real_length(batch["pred_long"], batch["mixed_lens"]),
-                                  target).sum()
+        short_si_sdr = si_sdr(pred_short, target).sum()
+        mid_si_sdr = si_sdr(pred_mid, target).sum()
+        long_si_sdr = si_sdr(pred_long, target).sum()
 
         si_sdr_loss = -((1 - self.alpha - self.beta) * short_si_sdr + self.alpha * mid_si_sdr + self.beta * long_si_sdr) / num_samples
         if not is_train:
