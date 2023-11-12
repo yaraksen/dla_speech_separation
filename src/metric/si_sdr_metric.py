@@ -32,4 +32,4 @@ class SiSDRMetric(BaseMetric):
         else:
             pred_short = pad(pred_short, (0, -pad_value))
 
-        return scale_invariant_signal_distortion_ratio(pred_short, target, zero_mean=True).item()
+        return scale_invariant_signal_distortion_ratio(pred_short, target, zero_mean=True).mean().item()

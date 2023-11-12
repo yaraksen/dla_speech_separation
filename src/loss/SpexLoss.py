@@ -10,7 +10,7 @@ def zero_mean(t: torch.Tensor):
     return t - torch.mean(t, dim=-1, keepdim=True)
 
 def si_sdr(est: Tensor, target: Tensor, **kwargs):
-    alpha = torch.sum(target * est, dim=-1, keepdim=True) / torch.square(torch.linalg.norm(target, dim=-1))
+    alpha = (torch.sum(target * est, dim=-1) / torch.square(torch.linalg.norm(target, dim=-1))).unsqueeze(1)
     return 20 * torch.log10(torch.linalg.norm(alpha * target, dim=-1) / (torch.linalg.norm(alpha * target - est, dim=-1) + 1e-6) + 1e-6)
 
 def to_real_length(t: Tensor, mixed_lens: Tensor) -> Tensor:

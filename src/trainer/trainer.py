@@ -52,7 +52,11 @@ class Trainer(BaseTrainer):
         self.evaluation_dataloaders = {k: v for k, v in dataloaders.items() if k != "train"}
         self.lr_scheduler = lr_scheduler
 
-        self.log_step = (self.len_epoch // self.grad_acc_steps) if self.grad_acc_steps > 1 else 50
+        if self.len_epoch == 1:
+            self.log_step = 1
+        else:
+            self.log_step = (self.len_epoch // self.grad_acc_steps) if self.grad_acc_steps > 1 else 50
+            
         assert self.len_epoch % self.grad_acc_steps == 0, f"{self.len_epoch} % {self.grad_acc_steps} != 0. I was lazy, so it should be like that to work correctly"
         assert (self.len_epoch // self.grad_acc_steps) % self.log_step == 0, f"{self.len_epoch // self.grad_acc_steps} % {self.log_step} != 0"
 

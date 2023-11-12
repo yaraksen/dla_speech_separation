@@ -32,7 +32,6 @@
       "type": "ReduceLROnPlateau",
       "args": {
         "patience": 2,
-        "cooldown": 2,
         "factor": 0.5,
         "verbose": true
       }
@@ -61,7 +60,7 @@
             "type": "SpeechSeparationDataset",
             "args": {
               "part": "train-clean-100",
-              "data_dir": "data/datasets/speech_separation/"
+              "data_dir": "data/datasets/speech_separation_old/"
             }
           }
         ]
@@ -74,7 +73,7 @@
             "type": "SpeechSeparationDataset",
             "args": {
               "part": "dev-clean",
-              "data_dir": "data/datasets/speech_separation/"
+              "data_dir": "data/datasets/speech_separation_old/"
             }
           }
         ]

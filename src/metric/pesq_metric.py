@@ -33,4 +33,4 @@ class PESQMetric(BaseMetric):
         else:
             pred_short = pad(pred_short, (0, -pad_value))
 
-        return perceptual_evaluation_speech_quality(pred_short, target, fs=16000, mode="wb").item()
+        return perceptual_evaluation_speech_quality(pred_short, target, fs=16000, mode="wb").mean().item()
