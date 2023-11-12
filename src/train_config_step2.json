@@ -44,7 +44,7 @@
       "monitor": "min val_loss",
       "early_stop": 500,
       "save_dir": "saved/",
-      "save_period": 5,
+      "save_period": 1,
       "log_parameters": false,
       "verbosity": 2,
       "visualize": "wandb",
