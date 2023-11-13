@@ -1,9 +1,9 @@
-# ASR project
+# Speech separation project
 ### Aksenov Yaroslav
 
 ## Installation guide
 
-Download [model](lol) to the folder ```final_model```
+Download [model](https://disk.yandex.ru/d/8QZKtK3w6-0row) to the folder ```final_model```
 
 ```shell
 pip install -r ./requirements.txt
