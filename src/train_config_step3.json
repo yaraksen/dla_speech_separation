@@ -32,12 +32,13 @@
       "type": "ReduceLROnPlateau",
       "args": {
         "patience": 2,
-        "factor": 0.5,
+        "factor": 0.7,
+        "min_lr": 1e-5, 
         "verbose": true
       }
     },
     "trainer": {
-      "epochs": 46,
+      "epochs": 48,
       "len_epoch": 1470,
       "grad_norm_clip": 10,
       "grad_acc_steps": 1,
@@ -53,7 +54,7 @@
     },
     "data": {
       "train": {
-        "batch_size": 3,
+        "batch_size": 4,
         "num_workers": 4,
         "datasets": [
           {
