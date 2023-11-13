@@ -33,12 +33,12 @@
       "args": {
         "patience": 2,
         "factor": 0.7,
-        "min_lr": 1e-5, 
+        "min_lr": 1e-5,
         "verbose": true
       }
     },
     "trainer": {
-      "epochs": 32,
+      "epochs": 48,
       "len_epoch": 1470,
       "grad_norm_clip": 10,
       "grad_acc_steps": 1,
@@ -87,7 +87,7 @@
     "optimizer": {
       "type": "AdamW",
       "args": {
-        "lr": 5e-4,
+        "lr": 0.00012,
         "weight_decay": 0.00001
       }
     },
