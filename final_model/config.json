@@ -1,99 +1,52 @@
 {
-    "name": "test_config",
-    "n_gpu": 1,
-    "preprocessing": {
-      "sr": 16000,
-      "spectrogram": {
-        "type": "MelSpectrogram",
-        "args": {
-          "n_mels": 128,
-          "normalized": true
-        }
-      },
-      "log_spec": true
-    },
-    "trainer": {
-      "epochs": 180,
-      "len_epoch": 258,
-      "grad_norm_clip": 10,
-      "grad_acc_steps": 2,
-      "monitor": "min val_loss",
-      "early_stop": 500,
-      "save_dir": "saved/",
-      "save_period": 5,
-      "log_parameters": false,
-      "verbosity": 2,
-      "visualize": "wandb",
-      "wandb_entity": "yaraksen",
-      "wandb_project": "asr2"
-    },
-    "arch": {
-      "type": "DeepSpeech2",
+  "name": "SpexPlus",
+  "n_gpu": 1,
+  "preprocessing": {
+    "sr": 16000
+  },
+  "arch": {
+    "type": "SpexPlus",
+    "args": {
+      "L1": 20,
+      "L2": 80,
+      "L3": 160,
+      "speaker_emb_size": 256,
+      "num_classes": 251,
+      "num_filters": 256,
+      "num_blocks": 8,
+      "num_stacks": 4,
+      "representation_channels": 256,
+      "de_cnn_channels": 512,
+      "de_cnn_k": 3
+    }
+  },
+  "trainer": {
+    "epochs": 48,
+    "len_epoch": 1470,
+    "grad_norm_clip": 10,
+    "grad_acc_steps": 1,
+    "monitor": "min val_loss",
+    "early_stop": 500,
+    "save_dir": "saved/",
+    "save_period": 1,
+    "log_parameters": false,
+    "verbosity": 2,
+    "visualize": "wandb",
+    "wandb_entity": "yaraksen",
+    "wandb_project": "speech_separation"
+  },
+  "metrics": [
+    {
+      "type": "SiSDRMetric",
       "args": {
-        "n_feats": 128,
-        "hidden_size": 700,
-        "num_rnn_layers": 5,
-        "rnn_type": "GRU",
-        "use_batch_norm": true,
-        "large": false
+        "name": "SI-SDR"
       }
     },
-    "data": {
-      "test-clean": {
-        "batch_size": 16,
-        "num_workers": 4,
-        "datasets": [
-          {
-            "type": "LibrispeechDataset",
-            "args": {
-              "part": "test-clean",
-              "data_dir": "data/datasets/librispeech"
-            }
-          }
-        ]
-      },
-      "test-other": {
-        "batch_size": 16,
-        "num_workers": 4,
-        "datasets": [
-          {
-            "type": "LibrispeechDataset",
-            "args": {
-              "part": "test-other",
-              "data_dir": "data/datasets/librispeech"
-            }
-          }
-        ]
+    {
+      "type": "PESQMetric",
+      "args": {
+        "name": "PESQ"
       }
-    },
-    "metrics": [
-      {
-        "type": "ArgmaxWERMetric",
-        "args": {
-          "name": "WER (argmax)"
-        }
-      },
-      {
-        "type": "ArgmaxCERMetric",
-        "args": {
-          "name": "CER (argmax)"
-        }
-      },
-      {
-        "type": "BeamSearchAllMetric",
-        "args": {
-          "name": "(BS)",
-          "beam_size": 3
-        }
-      },
-      {
-        "type": "LMBeamSearchAllMetric",
-        "args": {
-          "name": "(LMBS)",
-          "alpha": 0.5,
-          "beta": 1.5
-        }
-      }
-    ]
-  }
-  
+    }
+  ]
+}

@@ -25,14 +25,12 @@ def main(config, out_file):
     device = torch.device(f"cuda:{device_id}" if torch.cuda.is_available() else "cpu")
     print(device)
 
-    # text_encoder
-    text_encoder = config.get_text_encoder()
-
     # setup data_loader instances
-    dataloaders = get_dataloaders(config, text_encoder)
+    dataloaders = get_dataloaders(config)
+    print('TEST SIZE:', len(dataloaders["test"]))
 
     # build model architecture
-    model = config.init_obj(config["arch"], module_model, n_class=len(text_encoder))
+    model = config.init_obj(config["arch"], module_model)
     logger.info(model)
 
     logger.info("Loading checkpoint: {} ...".format(config.resume))
@@ -47,17 +45,14 @@ def main(config, out_file):
     model.eval()
 
     metrics = [
-        config.init_obj(metric_dict, module_metric, text_encoder=text_encoder)
+        config.init_obj(metric_dict, module_metric)
         for metric_dict in config['metrics']
     ]
 
     metric_names = []
     for met in metrics:
-        if "BS" in met.name:
-            metric_names.append('CER ' + met.name)
-            metric_names.append('WER ' + met.name)
-        else:
-            metric_names.append(met.name)
+        metric_names.append(met.name)
+    
     print(metric_names)
     
     evaluation_metrics = MetricTracker(*metric_names)
@@ -75,19 +70,10 @@ def main(config, out_file):
                     batch.update(output)
                 else:
                     batch["logits"] = output
-                batch["log_probs"] = torch.log_softmax(batch["logits"], dim=-1)
-                batch["log_probs_length"] = model.transform_input_lengths(
-                    batch["spectrogram_length"]
-                )
 
                 for met in metrics:
                     res = met(**batch)
-                    if isinstance(res, tuple):
-                        cer, wer = res
-                        evaluation_metrics.update('CER ' + met.name, cer, n=batch["logits"].shape[0])
-                        evaluation_metrics.update('WER ' + met.name, wer, n=batch["logits"].shape[0])
-                    else:
-                        evaluation_metrics.update(met.name, res, n=batch["logits"].shape[0])
+                    evaluation_metrics.update(met.name, res, n=batch["target"].shape[0])
     
             results[split] = evaluation_metrics.result()
 
@@ -135,7 +121,7 @@ if __name__ == "__main__":
     args.add_argument(
         "-b",
         "--batch-size",
-        default=5,
+        default=1,
         type=int,
         help="Test dataset batch size",
     )
@@ -175,12 +161,10 @@ if __name__ == "__main__":
                 "num_workers": args.jobs,
                 "datasets": [
                     {
-                        "type": "CustomDirAudioDataset",
+                        "type": "SpeechSeparationDataset",
                         "args": {
-                            "audio_dir": str(test_data_folder / "audio"),
-                            "transcription_dir": str(
-                                test_data_folder / "transcriptions"
-                            ),
+                            "part": "",
+                            "data_dir": test_data_folder
                         },
                     }
                 ],

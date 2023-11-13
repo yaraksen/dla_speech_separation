@@ -76,9 +76,9 @@ class SpeechSeparationDataset(Dataset):
         if not split_dir.exists():
             raise Exception(f"Part {part} does not exist")
 
-        mixed_files = sorted(glob(str(split_dir / "*-mixed.wav")))
-        ref_files = sorted(glob(str(split_dir / "*-ref.wav")))
-        target_files = sorted(glob(str(split_dir / "*-target.wav")))
+        mixed_files = sorted(glob(str(split_dir / "**/*-mixed.wav")))
+        ref_files = sorted(glob(str(split_dir / "**/*-ref.wav")))
+        target_files = sorted(glob(str(split_dir / "**/*-target.wav")))
         assert len(mixed_files) == len(ref_files) == len(target_files), "ref/mix/target should have the same size"
 
         for mixed, ref, target in tqdm(

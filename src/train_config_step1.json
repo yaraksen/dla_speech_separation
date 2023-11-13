@@ -29,18 +29,16 @@
     }
   },
   "lr_scheduler": {
-    "type": "ReduceLROnPlateau",
+    "type": "CosineAnnealingLR",
     "args": {
-      "patience": 2,
-      "factor": 0.5,
-      "verbose": true
+      "T_max": 51000
     }
   },
   "trainer": {
     "epochs": 510,
     "len_epoch": 100,
     "grad_norm_clip": 10,
-    "grad_acc_steps": 1,
+    "grad_acc_steps": 2,
     "monitor": "min val_loss",
     "early_stop": 500,
     "save_dir": "saved/",
@@ -60,7 +58,7 @@
           "type": "SpeechSeparationDataset",
           "args": {
             "part": "train-clean-100",
-            "data_dir": "/kaggle/input/speech-separation/train-clean-100/data/datasets/speech_separation/"
+            "data_dir": "data/datasets/speech_separation"
           }
         }
       ]
@@ -73,7 +71,7 @@
           "type": "SpeechSeparationDataset",
           "args": {
             "part": "dev-clean",
-            "data_dir": "/kaggle/input/speech-separation/dev-clean/data/datasets/speech_separation/"
+            "data_dir": "data/datasets/speech_separation"
           }
         }
       ]
@@ -86,7 +84,7 @@
   "optimizer": {
     "type": "AdamW",
     "args": {
-      "lr": 1e-4,
+      "lr": 1e-3,
       "weight_decay": 0.00005
     }
   },

@@ -219,8 +219,7 @@ class SpexPlus(nn.Module):
         ref_logits = self.classifier(ref_enc) # B x num_classes
 
         # speaker extractor
-        # added skip-connection
-        mixed_enc = self.tcn_blocks((mixed_enc, ref_enc))[0] + mixed_enc # (x, spk_emb)[0]
+        mixed_enc = self.tcn_blocks((mixed_enc, ref_enc))[0] # (x, spk_emb)[0]
         pred_short = mixed_short * self.mask_short(mixed_enc)
         pred_mid = mixed_mid * self.mask_mid(mixed_enc)
         pred_long = mixed_long * self.mask_long(mixed_enc)

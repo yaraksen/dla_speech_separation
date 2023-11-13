@@ -60,7 +60,7 @@
             "type": "SpeechSeparationDataset",
             "args": {
               "part": "train-clean-100",
-              "data_dir": "/kaggle/input/ss-dataset-no-wad"
+              "data_dir": "data/datasets/speech_separation"
             }
           }
         ]
@@ -73,7 +73,7 @@
             "type": "SpeechSeparationDataset",
             "args": {
               "part": "dev-clean",
-              "data_dir": "/kaggle/input/ss-dataset-no-wad"
+              "data_dir": "data/datasets/speech_separation"
             }
           }
         ]

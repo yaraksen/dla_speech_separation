@@ -1,0 +1,53 @@
+{
+    "name": "SpexPlus",
+    "n_gpu": 1,
+    "preprocessing": {
+      "sr": 16000
+    },
+    "arch": {
+      "type": "SpexPlus",
+      "args": {
+        "L1": 20,
+        "L2": 80,
+        "L3": 160,
+        "speaker_emb_size": 256,
+        "num_classes": 251,
+        "num_filters": 256,
+        "num_blocks": 8,
+        "num_stacks": 4,
+        "representation_channels": 256,
+        "de_cnn_channels": 512,
+        "de_cnn_k": 3
+      }
+    },
+    "trainer": {
+      "epochs": 48,
+      "len_epoch": 1470,
+      "grad_norm_clip": 10,
+      "grad_acc_steps": 1,
+      "monitor": "min val_loss",
+      "early_stop": 500,
+      "save_dir": "saved/",
+      "save_period": 1,
+      "log_parameters": false,
+      "verbosity": 2,
+      "visualize": "wandb",
+      "wandb_entity": "yaraksen",
+      "wandb_project": "speech_separation"
+    },
+    "metrics": [
+      {
+        "type": "SiSDRMetric",
+        "args": {
+          "name": "SI-SDR"
+        }
+      },
+      {
+        "type": "PESQMetric",
+        "args": {
+          "name": "PESQ"
+        }
+      }
+    ]
+  }
+  
